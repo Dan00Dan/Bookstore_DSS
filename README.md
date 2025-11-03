@@ -56,6 +56,82 @@ bookstore/
 ├── requirements.txt
 └── README.md
 ```
+'''
+Bookstore_DSS/
+│
+├── manage.py
+├── Procfile
+├── requirements.txt
+├── dump.sql
+├── .gitignore
+│
+├── db.sqlite3
+├── db_backup.sqlite3
+├── db_broken_backup.sqlite3
+├── db_broken.sqlite3
+├── db_corrupted.sqlite3
+├── db_fixed.sqlite3
+│
+├── bookstore/                       # Thư mục project Django chính
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── asgi.py
+│
+├── store/                           # Ứng dụng chính (app)
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── context_processors.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── urls.py
+│   ├── views.py
+│   ├── views_admin.py
+│   │
+│   ├── management/
+│   │   └── commands/
+│   │       └── seed_data.py
+│   │
+│   ├── migrations/
+│   │   └── __init__.py
+│   │
+│   ├── static/
+│   │   └── store/
+│   │       └── css/
+│   │           └── style.css
+│   │
+│   └── templates/
+│       └── store/
+│           ├── admin_book_form.html
+│           ├── admin_books.html
+│           ├── admin_categories.html
+│           ├── admin_category_form.html
+│           ├── admin_login.html
+│           ├── admin_orders.html
+│           ├── base.html
+│           ├── book_detail.html
+│           ├── book_form.html
+│           ├── cart.html
+│           ├── checkout.html
+│           ├── dashboard.html
+│           ├── index.html
+│           ├── login.html
+│           ├── order_detail.html
+│           ├── order_history.html
+│           ├── order_success.html
+│           └── register.html
+│
+├── media/                           # Thư mục lưu ảnh người dùng upload
+│   └── books/
+│       ├── tuoitredanggiabaonhieu.jpg
+│       └── .gitkeep
+│
+├── scripts/                         # Thư mục phụ chứa các script tiện ích
+│
+└── static/                          # Static chung (nếu có)
+
+'''
 
 ## Models
 
