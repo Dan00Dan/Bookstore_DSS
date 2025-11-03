@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tiệm sách Urahara{% endblock %}</title>
+
+    <meta name="description" content="Tiệm sách Urahara - Nơi bạn có thể tìm thấy những cuốn sách hay nhất về công nghệ, khoa học, kinh tế và tiểu thuyết.">
+    <meta name="keywords" content="sách, bookstore, urahara, mua sách online, sách nguyễn nhật ánh, nhà giả kim, đọc sách hay">
+    <meta name="author" content="Tiệm sách Urahara">
+
+    <meta property="og:title" content="📚 Tiệm sách Urahara - Cửa hàng sách trực tuyến">
+    <meta property="og:description" content="Khám phá hàng ngàn đầu sách hấp dẫn tại Tiệm sách Urahara!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nataly-overfree-undenotatively.ngrok-free.dev/">
+    <meta property="og:image" content="https://nataly-overfree-undenotatively.ngrok-free.dev/static/store/img/banner_noel.png">
+
+    {% load static %}
+    <link rel="icon" href="{% static 'store/img/banner_noel.png' %}" type="image/png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'store/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'store/css/christmas.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <i class="bi bi-book"></i> Tiệm sách Urahara
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Trang chủ</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav">
+                    {% if user.is_staff %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-tools"></i> Quản lý
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'admin_books' %}">
+                                📚 Quản lý sách
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'admin_categories' %}">
+                                🗂️ Quản lý danh mục
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'dashboard' %}">
+                                📊 Thống kê
+                            </a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        {% if user.is_staff %}
+                            <!-- Chỉ admin mới thấy -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'dashboard' %}">
+                                    <i class="bi bi-graph-up"></i> Quản trị
+                                </a>
+                            </li>
+                        {% else %}
+                            <!-- Người dùng thường -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cart' %}">
+                                    <i class="bi bi-cart"></i> Giỏ hàng
+                                    {% if cart_count > 0 %}
+                                        <span class="badge bg-danger">{{ cart_count }}</span>
+                                    {% endif %}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'order_history' %}">
+                                    <i class="bi bi-receipt"></i> Đơn hàng
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        <!-- Dropdown tài khoản -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person"></i> {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'logout' %}">
+                                        <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <!-- Nếu chưa đăng nhập -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">
+                                <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">
+                                <i class="bi bi-person-plus"></i> Đăng ký
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main class="container my-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-light mt-5 py-4">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 Tiệm sách Urahara. All rights reserved. 🎄</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

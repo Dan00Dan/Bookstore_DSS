@@ -1,0 +1,22 @@
+{% extends 'store/admin_base.html' %}
+{% block title %}{{ action }} danh mục{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="bi bi-folder-plus"></i> {{ action }} danh mục</h2>
+    <hr>
+
+    <form method="post" class="mt-3">
+        {% csrf_token %}
+        <div class="card shadow-sm p-4">
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle"></i> Lưu thay đổi
+            </button>
+            <a href="{% url 'admin_categories' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Quay lại
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

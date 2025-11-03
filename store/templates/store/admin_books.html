@@ -1,0 +1,27 @@
+{% extends 'store/base.html' %}
+{% block title %}Quản lý Sách{% endblock %}
+{% block content %}
+<h2>📚 Quản lý Sách</h2>
+<a href="{% url 'add_book' %}" class="btn btn-success mb-3">➕ Thêm sách mới</a>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th><th>Tiêu đề</th><th>Tác giả</th><th>Giá</th><th>Hành động</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for book in books %}
+    <tr>
+      <td>{{ book.id }}</td>
+      <td>{{ book.title }}</td>
+      <td>{{ book.author }}</td>
+      <td>{{ book.price }} đ</td>
+      <td>
+        <a href="{% url 'edit_book' book.id %}" class="btn btn-warning btn-sm">✏️</a>
+        <a href="{% url 'delete_book' book.id %}" class="btn btn-danger btn-sm">🗑️</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'store/base.html' %}
+{% load humanize %}
+
+{% block title %}Giỏ hàng - Tiệm sách Urahara{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-cart"></i> Giỏ hàng của bạn</h2>
+
+{% if cart_items %}
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="table-primary">
+                <tr>
+                    <th>Hình ảnh</th>
+                    <th>Tên sách</th>
+                    <th>Tác giả</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                    <tr>
+                        <td>
+                            {% if item.book.image %}
+                                <img src="{{ item.book.image.url }}" alt="{{ item.book.title }}" 
+                                     style="width: 80px; height: 100px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-secondary d-flex align-items-center justify-content-center" 
+                                     style="width: 80px; height: 100px;">
+                                    <i class="bi bi-book text-white"></i>
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'book_detail' item.book.slug %}" class="text-decoration-none">
+                                {{ item.book.title }}
+                            </a>
+                        </td>
+                        <td>{{ item.book.author }}</td>
+                        <td>{{ item.book.price|floatformat:0|intcomma }} đ</td>
+                        <td>
+                            <form action="{% url 'update_cart' item.id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <input type="number" name="quantity" value="{{ item.quantity }}" 
+                                       min="1" max="{{ item.book.stock }}" class="form-control d-inline-block" 
+                                       style="width: 80px;" onchange="this.form.submit()">
+                            </form>
+                        </td>
+                        <td class="fw-bold">{{ item.get_total_price|floatformat:0|intcomma }} đ</td>
+                        <td>
+                            <form action="{% url 'remove_from_cart' item.id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm" 
+                                        onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+                                    <i class="bi bi-trash"></i> Xóa
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" class="text-end"><strong>Tổng tiền:</strong></td>
+                    <td class="fw-bold text-danger fs-5">{{ total_price|floatformat:0|intcomma }} đ</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+    <div class="text-end mt-4">
+        <a href="{% url 'index' %}" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
+        </a>
+        <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-credit-card"></i> Thanh toán
+        </a>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Giỏ hàng của bạn đang trống.
+    </div>
+    <a href="{% url 'index' %}" class="btn btn-primary">
+        <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
+    </a>
+{% endif %}
+{% endblock %}
+

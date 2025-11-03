@@ -1,0 +1,55 @@
+{% extends 'store/base.html' %}
+{% load humanize %}
+
+{% block title %}Lịch sử đơn hàng - Tiệm sách Urahara{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-receipt"></i> Lịch sử đơn hàng</h2>
+
+{% if orders %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                        <td class="fw-bold">{{ order.total_price|floatformat:0|intcomma }} đ</td>
+                        <td>
+                            {% if order.status == 'pending' %}
+                                <span class="badge bg-warning">{{ order.get_status_display }}</span>
+                            {% elif order.status == 'completed' %}
+                                <span class="badge bg-success">{{ order.get_status_display }}</span>
+                            {% elif order.status == 'cancelled' %}
+                                <span class="badge bg-danger">{{ order.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i> Xem chi tiết
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Bạn chưa có đơn hàng nào.
+    </div>
+    <a href="{% url 'index' %}" class="btn btn-primary">
+        <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
+    </a>
+{% endif %}
+{% endblock %}
+

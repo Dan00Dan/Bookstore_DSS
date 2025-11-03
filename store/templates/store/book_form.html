@@ -1,0 +1,11 @@
+{% extends 'store/admin_base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h2 class="mb-4">{{ title }}</h2>
+<form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Lưu</button>
+    <a href="{% url 'manage_books' %}" class="btn btn-secondary">Hủy</a>
+</form>
+{% endblock %}

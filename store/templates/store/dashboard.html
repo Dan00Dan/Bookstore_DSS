@@ -1,0 +1,143 @@
+{% extends 'store/admin_base.html' %}
+{% load humanize %}
+
+{% block title %}Dashboard - Tiệm sách Urahara{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-graph-up"></i> Dashboard - Thống kê</h2>
+
+<!-- Doanh thu -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-calendar-day"></i> Doanh thu hôm nay
+                </h5>
+                <h2 class="card-text">{{ today_revenue|floatformat:0|intcomma }} đ</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-calendar-month"></i> Doanh thu tháng này
+                </h5>
+                <h2 class="card-text">{{ month_revenue|floatformat:0|intcomma }} đ</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top 5 sách bán chạy -->
+<div class="row">
+    <div class="col-md-5">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-trophy"></i> Top 5 sách bán chạy nhất</h5>
+            </div>
+            <div class="card-body">
+                {% if top_books %}
+                    <div class="list-group">
+                        {% for item in top_books %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <div>
+                                        <h6 class="mb-1">{{ item.book__title }}</h6>
+                                        <small class="text-muted">Tác giả: {{ item.book__author }}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-primary rounded-pill">{{ item.total_sold }} cuốn</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">Chưa có dữ liệu bán hàng.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-7">
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Biểu đồ sách bán chạy</h5>
+            </div>
+            <div class="card-body" style="height: 400px;">
+                {% if top_books %}
+                    <canvas id="salesChart"></canvas>
+                {% else %}
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-info-circle" style="font-size: 3rem;"></i>
+                        <p class="mt-3">Chưa có dữ liệu để hiển thị biểu đồ.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script Chart.js -->
+{% if top_books %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // Dữ liệu từ Django
+    const chartLabels = {{ chart_labels|safe }};
+    const chartData = {{ chart_data|safe }};
+
+    // Tạo biểu đồ cột
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const salesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: chartLabels,
+            datasets: [{
+                label: 'Số lượng đã bán',
+                data: chartData,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(255, 206, 86, 0.8)',
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(153, 102, 255, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                title: {
+                    display: true,
+                    text: 'Top 5 sách bán chạy nhất (số lượng đã bán)'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,79 @@
+/* Rating Stars CSS with SVG Animation */
+
+.rating-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.rating-label {
+    font-weight: 600;
+    color: #151717;
+    margin-bottom: 10px;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.radio-input {
+    display: none;
+}
+
+.radio-label {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.radio-label:hover {
+    transform: scale(1.2);
+}
+
+.radio-label svg {
+    width: 40px;
+    height: 40px;
+    transition: all 0.3s ease;
+}
+
+.radio-input:checked + .radio-label svg {
+    filter: drop-shadow(0 0 10px var(--christmas-gold));
+    transform: scale(1.1);
+}
+
+.radio-label svg .star-fill {
+    fill: #e0e0e0;
+    transition: fill 0.3s ease;
+}
+
+.radio-input:checked + .radio-label svg .star-fill,
+.radio-label:hover svg .star-fill {
+    fill: var(--christmas-gold);
+}
+
+/* Animated stars */
+@keyframes starPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.radio-input:checked + .radio-label svg {
+    animation: starPulse 0.5s ease;
+}
+
+/* Hover effect for all stars up to hovered one */
+.rating-stars:hover .radio-label:has(~ .radio-label:hover) svg .star-fill,
+.rating-stars .radio-label:hover ~ .radio-label svg .star-fill {
+    fill: var(--christmas-gold);
+}
+
+@media (max-width: 768px) {
+    .radio-label svg {
+        width: 35px;
+        height: 35px;
+    }
+}
+
