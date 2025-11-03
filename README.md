@@ -55,8 +55,7 @@ bookstore/
 │               └── style.css
 ├── requirements.txt
 └── README.md
-```
-'''
+---------------------------------
 Bookstore_DSS/
 │
 ├── manage.py
@@ -131,7 +130,7 @@ Bookstore_DSS/
 │
 └── static/                          # Static chung (nếu có)
 
-'''
+```
 
 ## Models
 
